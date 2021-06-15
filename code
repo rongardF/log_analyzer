@@ -1,0 +1,62 @@
+from tkinter import *
+import os
+from tkinter.filedialog import askdirectory
+from tkinter import messagebox
+import subprocess
+
+def analyser(pat):
+	with open(pat,'r') as f:
+		try:
+			for line in f:
+				if search in line:
+					d.update()
+					d.insert(END, pat)
+					break
+		except:
+			pass
+
+def finder(pat):   
+    try:
+        for file in os.listdir(pat):
+            spat=pat+'/'+file 
+            if os.path.isdir(spat):
+                finder(spat)
+            else:
+                if file.endswith(".txt"):
+                    analyser(spat)
+    except Exception as e:    
+        print ("Error:::",pat,e)
+
+def find_strg(path):
+    global search
+    if search_word.get()=='':
+        var=messagebox.showwarning(message="Please a provide a search string!")
+    else:
+        search=search_word.get()
+        finder(path)
+    
+def choose_folder():
+    global path
+    foldername = askdirectory() 
+    path=foldername
+    folder_name.delete(0,END)
+    folder_name.update()
+    folder_name.insert(END, path)    
+    
+if __name__=="__main__":
+	parent=Tk()
+	parent.title('Log analyzer')
+	parent.iconbitmap('icon.ico')
+	Label(parent,text="Folder name: ").grid(row=0,column=0,sticky='e')
+	folder_name=Entry(parent,width=20)
+	folder_name.grid(row=0,column=1,padx=2,pady=2,sticky='we',columnspan=9)
+	Label(parent,text="Search word: ").grid(row=1,column=0,sticky='e')
+	search_word=Entry(parent,width=20)
+	search_word.grid(row=1,column=1,padx=2,pady=2,sticky='we',columnspan=9)
+	Label(parent,text="Search Results: ").grid(row=3,column=0,sticky='e')
+	d=Listbox(parent,width=125,height=20)
+	d.grid(row=4,column=3,padx=2,pady=2,sticky='we',columnspan=9)
+	Button(parent,text="Folder",command=lambda:choose_folder()).grid(row=0,column=10,sticky='e'+'w',padx=2,pady=2,)
+	start=Button(parent,text="Start",command=lambda:find_strg(path)).grid(row=1,column=10,sticky='e'+'w',padx=2,pady=2,)
+	Button(parent,text="Exit",command=parent.destroy).grid(row=3,column=10,sticky='e'+'w',padx=2,pady=2)
+	parent.mainloop()
